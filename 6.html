@@ -22,17 +22,16 @@
       var compileParam = {
         optimizer: tf.train.adam(),
         loss: tf.losses.meanSquaredError,
-      }; //입력값
+      };
       model.compile(compileParam);
 
       // 3. 데이터로 모델을 학습시킵니다.
-      //var fitParam = { epochs: 100 };
+      //         var fitParam = {epochs: 100}
       var fitParam = {
         epochs: 100,
         callbacks: {
-          //하나하나 분리해서 알려줌
           onEpochEnd: function (epoch, logs) {
-            console.log("epoch", epoch, logs);
+            console.log("epoch", epoch, logs, "RMSE=>", Math.sqrt(logs.loss));
           },
         },
       }; // loss 추가 예제
@@ -44,10 +43,10 @@
       });
 
       // 4.2 새로운 데이터를 이용
-      // var 다음주온도 = [15,16,17, 18, 19]
+      // var 다음주온도 = [15,16,17,18,19]
       // var 다음주원인 = tf.tensor(다음주온도);
       // var 다음주결과 = model.predict(다음주원인);
-      다음주결과.print();
+      // 다음주결과.print();
     </script>
   </body>
 </html>
