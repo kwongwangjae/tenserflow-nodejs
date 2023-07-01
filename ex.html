@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <!-- Load TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <!-- Load MobileNet model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  </head>
+  <body>
+    <!-- Add a video element to capture webcam -->
+    <video id="webcam" autoplay playsinline muted></video>
+    <div id="console"></div>
+
+    <script>
+      let video;
+      let model;
+
+      const init = async () => {
+        // Load the model.
+        model = await mobilenet.load();
+
+        // Access the webcam
+        video = document.getElementById("webcam");
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        video.srcObject = stream;
+
+        // Wait for the video to be ready
+        await new Promise((resolve) => (video.onloadedmetadata = resolve));
+
+        // Run prediction each animation frame
+        requestAnimationFrame(predict);
+      };
+
+      const predict = async () => {
+        // Classify the image from the webcam.
+        const predictions = await model.classify(video);
+
+        // Write out the result to the console.
+        document.getElementById("console").innerText = JSON.stringify(
+          predictions,
+          null,
+          2
+        );
+
+        // Run prediction on the next animation frame.
+        requestAnimationFrame(predict);
+      };
+
+      // Start the video and prediction.
+      init();
+    </script>
+  </body>
+</html>
